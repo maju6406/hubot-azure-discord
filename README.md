@@ -95,7 +95,7 @@ Application Insights is automatically configured during deployment and provides:
 1. **Access Application Insights:**
    - Navigate to the [Azure Portal](https://portal.azure.com)
    - Go to your Resource Group
-   - Click on the Application Insights resource (named `<your-siteName>-insights` where `<your-siteName>` is the value you provided during deployment)
+   - Click on the Application Insights resource (named `{siteName}-insights` where `{siteName}` is the siteName parameter value you provided during deployment)
 
 2. **View Real-time Metrics:**
    - Click **Live Metrics** in the left menu to see real-time telemetry
@@ -161,17 +161,17 @@ Your hubot's persistent memory is stored in Azure Blob Storage via `hubot-azure-
 ### Deployment Outputs
 
 After deployment completes, the following information will be displayed in the Azure Portal deployment outputs:
-- **Web App URL:** `https://<your-siteName>.azurewebsites.net` (where `<your-siteName>` is the value you provided)
-- **Application Insights Name:** `<your-siteName>-insights`
-- **Storage Account Name:** `<your-storageAccountName>` (the value you provided)
+- **Web App URL:** `https://{siteName}.azurewebsites.net` (where `{siteName}` is the siteName parameter value)
+- **Application Insights Name:** `{siteName}-insights`
+- **Storage Account Name:** `{storageAccountName}` (the storageAccountName parameter value)
 
 You can also find this information in the Azure Portal under your Resource Group.
 
 ### Health Monitoring
 
-To verify your bot is running (replace `<your-siteName>` with your actual site name):
+To verify your bot is running (replace `{siteName}` with your siteName parameter value):
 
-1. Visit `https://<your-siteName>.azurewebsites.net` - you should see the hubot web interface (typically displays "OK" or basic status information)
+1. Visit `https://{siteName}.azurewebsites.net` - you should see the hubot web interface (typically displays "OK" or basic status information)
 2. Check Application Insights Live Metrics for active requests
 3. Verify the bot is online in your Discord server
 4. Test a command like `@hubot ping` in Discord
