@@ -13,6 +13,7 @@
     },
     "hostingPlanName": {
       "type": "string",
+      "defaultValue": "[concat(parameters('siteName'), '-plan')]",
       "metadata": {
         "description": "Name of the App Service plan for the web app"
       }
