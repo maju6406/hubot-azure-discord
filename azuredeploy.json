@@ -38,12 +38,8 @@
       }
     },
     "enableAlwaysOn": {
-      "type": "string",
-      "allowedValues": [
-        "True",
-        "False"
-      ],
-      "defaultValue": "False",
+      "type": "bool",
+      "defaultValue": false,
       "metadata": {
         "description": "Enable Always On (not available on Free/Shared tiers)"
       }
@@ -101,8 +97,8 @@
       "Standard": "S1"
     },
     "resolvedSku": "[variables('tierToSku')[parameters('pricingTier')]]",
-    "storageApi": "2021-04-01",
-    "webApi": "2021-02-01"
+    "storageApi": "2022-09-01",
+    "webApi": "2022-03-01"
   },
   "resources": [
     {

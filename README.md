@@ -29,7 +29,7 @@ Before deploying, you need a Discord bot token:
 | `hostingPlanName` | string | Name of the App Service plan for the web app |
 | `location` | string | Azure region for deploying all resources (defaults to the resource group location) |
 | `pricingTier` | string | App Service pricing tier: Free, Shared, Basic, or Standard |
-| `enableAlwaysOn` | string | Enable Always On (set to False for Free/Shared tiers) |
+| `enableAlwaysOn` | bool | Enable Always On (set to false for Free/Shared tiers) |
 | `storageAccountName` | string | Storage account name for hubot brain persistence via hubot-azure-brain |
 | `storageAccountType` | string | Replication strategy: Standard_LRS, Standard_GRS, or Standard_ZRS |
 | `discordBotToken` | securestring | Discord bot token from the Developer Portal |
@@ -52,7 +52,6 @@ Once deployment is complete:
 
 1. The bot should appear online in your Discord server
 2. In any channel where the bot has been added, type `@hubot help` (or whatever name you chose) to see available commands
-3. You can also access `https://<your-site-name>.azurewebsites.net/<hubot-name>/help` to see the help page
 
 ## Adding Scripts
 
