@@ -98,7 +98,8 @@
     },
     "resolvedSku": "[variables('tierToSku')[parameters('pricingTier')]]",
     "storageApi": "2022-09-01",
-    "webApi": "2022-03-01"
+    "webApi": "2022-03-01",
+    "appInsightsName": "[concat(parameters('siteName'), '-insights')]"
   },
   "resources": [
     {
@@ -125,20 +126,36 @@
       }
     },
     {
+      "type": "Microsoft.Insights/components",
+      "name": "[variables('appInsightsName')]",
+      "apiVersion": "2020-02-02",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "Request_Source": "rest",
+        "RetentionInDays": 90,
+        "publicNetworkAccessForIngestion": "Enabled",
+        "publicNetworkAccessForQuery": "Enabled"
+      }
+    },
+    {
       "type": "Microsoft.Web/sites",
       "name": "[parameters('siteName')]",
       "apiVersion": "[variables('webApi')]",
       "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
           "alwaysOn": "[parameters('enableAlwaysOn')]",
           "httpLoggingEnabled": true,
-          "detailedErrorLoggingEnabled": true
+          "detailedErrorLoggingEnabled": true,
+          "requestTracingEnabled": true
         }
       },
       "resources": [
@@ -147,14 +164,19 @@
           "name": "appsettings",
           "apiVersion": "[variables('webApi')]",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
+            "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
           ],
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "~18",
             "HUBOT_ADAPTER": "discord",
             "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
             "HUBOT_BRAIN_AZURE_CONNSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), variables('storageApi')).keys[0].value, ';EndpointSuffix=core.windows.net')]",
-            "HUBOT_NAME": "[parameters('hubotName')]"
+            "HUBOT_NAME": "[parameters('hubotName')]",
+            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
+            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').ConnectionString]",
+            "ApplicationInsightsAgent_EXTENSION_VERSION": "~3",
+            "XDT_MicrosoftApplicationInsights_Mode": "recommended"
           }
         },
         {
@@ -173,5 +195,28 @@
         }
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "webAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', parameters('siteName')), variables('webApi')).defaultHostName)]",
+      "metadata": {
+        "description": "URL of the deployed web app"
+      }
+    },
+    "applicationInsightsName": {
+      "type": "string",
+      "value": "[variables('appInsightsName')]",
+      "metadata": {
+        "description": "Name of the Application Insights resource"
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[parameters('storageAccountName')]",
+      "metadata": {
+        "description": "Name of the storage account for hubot brain"
+      }
+    }
+  }
 }
