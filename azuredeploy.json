@@ -138,8 +138,7 @@
         "siteConfig": {
           "alwaysOn": "[parameters('enableAlwaysOn')]",
           "httpLoggingEnabled": true,
-          "detailedErrorLoggingEnabled": true,
-          "nodeVersion": "~18"
+          "detailedErrorLoggingEnabled": true
         }
       },
       "resources": [
@@ -151,6 +150,7 @@
             "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
           ],
           "properties": {
+            "WEBSITE_NODE_DEFAULT_VERSION": "~18",
             "HUBOT_ADAPTER": "discord",
             "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
             "HUBOT_BRAIN_AZURE_CONNSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), variables('storageApi')).keys[0].value, ';EndpointSuffix=core.windows.net')]",
