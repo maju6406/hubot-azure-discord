@@ -41,6 +41,7 @@ Before deploying, you need a Discord bot token:
 
 The ARM template automatically configures these environment variables on the Azure Web App:
 
+- `WEBSITE_NODE_DEFAULT_VERSION` — Node.js runtime version (set to `~18`)
 - `HUBOT_ADAPTER` — Set to `discord`
 - `HUBOT_DISCORD_TOKEN` — Your Discord bot token
 - `HUBOT_BRAIN_AZURE_CONNSTRING` — Connection string for Azure Blob Storage (auto-generated from the storage account)
