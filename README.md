@@ -54,12 +54,12 @@ If the token is invalid, you'll receive an error response:
 | Parameter | Type | Description |
 |---|---|---|
 | `siteName` | string | Name of the Azure Web App that hosts the hubot instance |
-| `hostingPlanName` | string | Name of the App Service plan for the web app |
+| `hostingPlanName` | string | Name of the App Service plan for the web app (default: {siteName}-plan) |
 | `location` | string | Azure region for deploying all resources (defaults to the resource group location) |
-| `pricingTier` | string | App Service pricing tier: Free, Shared, Basic, or Standard |
-| `enableAlwaysOn` | bool | Enable Always On (set to false for Free/Shared tiers) |
+| `pricingTier` | string | App Service pricing tier: Free, Shared, Basic, or Standard (default: Free) |
+| `enableAlwaysOn` | bool | Enable Always On (set to false for Free/Shared tiers, default: false) |
 | `storageAccountName` | string | Storage account name for hubot brain persistence via hubot-azure-brain |
-| `storageAccountType` | string | Replication strategy: Standard_LRS, Standard_GRS, or Standard_ZRS |
+| `storageAccountType` | string | Replication strategy: Standard_LRS, Standard_GRS, or Standard_ZRS (default: Standard_LRS) |
 | `discordBotToken` | securestring | Discord bot token from the Developer Portal |
 | `hubotName` | string | Display name for the hubot instance (default: hubot) |
 | `repoUrl` | string | URL of your forked repository |
