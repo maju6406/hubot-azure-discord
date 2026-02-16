@@ -105,7 +105,7 @@ Application Insights is automatically configured (unless disabled during deploym
 3. **Query Logs:**
    - Click **Logs** in the left menu
    - Example queries:
-     ```kusto
+     ```
      // View all traces (console.log output)
      traces
      | where timestamp > ago(1h)
