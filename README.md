@@ -171,7 +171,7 @@ You can also find this information in the Azure Portal under your Resource Group
 
 To verify your bot is running (replace `<your-siteName>` with your actual site name):
 
-1. Visit `https://<your-siteName>.azurewebsites.net` - you should see a basic response
+1. Visit `https://<your-siteName>.azurewebsites.net` - you should see the hubot web interface (typically displays "OK" or basic status information)
 2. Check Application Insights Live Metrics for active requests
 3. Verify the bot is online in your Discord server
 4. Test a command like `@hubot ping` in Discord
