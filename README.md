@@ -64,7 +64,6 @@ If the token is invalid, you'll receive an error response:
 | `hubotName` | string | Display name for the hubot instance (default: hubot) |
 | `repoUrl` | string | URL of your forked repository |
 | `branch` | string | Git branch to deploy from (default: main) |
-| `enableApplicationInsights` | bool | Enable Application Insights for monitoring and logging (default: true) |
 
 ## Environment Variables
 
@@ -75,8 +74,8 @@ The ARM template automatically configures these environment variables on the Azu
 - `HUBOT_DISCORD_TOKEN` — Your Discord bot token
 - `HUBOT_BRAIN_AZURE_CONNSTRING` — Connection string for Azure Blob Storage (auto-generated from the storage account)
 - `HUBOT_NAME` — The bot display name
-- `APPINSIGHTS_INSTRUMENTATIONKEY` — Application Insights instrumentation key (when enabled)
-- `APPLICATIONINSIGHTS_CONNECTION_STRING` — Application Insights connection string (when enabled)
+- `APPINSIGHTS_INSTRUMENTATIONKEY` — Application Insights instrumentation key (automatically configured)
+- `APPLICATIONINSIGHTS_CONNECTION_STRING` — Application Insights connection string (automatically configured)
 
 ## Usage
 
@@ -91,7 +90,7 @@ After your hubot instance is deployed, you can leverage several Azure services f
 
 ### Application Insights - Monitoring & Logs
 
-Application Insights is automatically configured (unless disabled during deployment) and provides:
+Application Insights is automatically configured during deployment and provides:
 
 1. **Access Application Insights:**
    - Navigate to the [Azure Portal](https://portal.azure.com)

@@ -87,13 +87,6 @@
       "metadata": {
         "description": "Git branch to deploy from"
       }
-    },
-    "enableApplicationInsights": {
-      "type": "bool",
-      "defaultValue": true,
-      "metadata": {
-        "description": "Enable Application Insights for monitoring and logging"
-      }
     }
   },
   "variables": {
@@ -137,7 +130,6 @@
       "name": "[variables('appInsightsName')]",
       "apiVersion": "2020-02-02",
       "location": "[parameters('location')]",
-      "condition": "[parameters('enableApplicationInsights')]",
       "kind": "web",
       "properties": {
         "Application_Type": "web",
@@ -154,7 +146,8 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
       ],
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
@@ -172,7 +165,7 @@
           "apiVersion": "[variables('webApi')]",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-            "[if(parameters('enableApplicationInsights'), resourceId('Microsoft.Insights/components', variables('appInsightsName')), resourceId('Microsoft.Web/sites', parameters('siteName')))]"
+            "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
           ],
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "~18",
@@ -180,10 +173,10 @@
             "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
             "HUBOT_BRAIN_AZURE_CONNSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), variables('storageApi')).keys[0].value, ';EndpointSuffix=core.windows.net')]",
             "HUBOT_NAME": "[parameters('hubotName')]",
-            "APPINSIGHTS_INSTRUMENTATIONKEY": "[if(parameters('enableApplicationInsights'), reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').InstrumentationKey, '')]",
-            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[if(parameters('enableApplicationInsights'), reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').ConnectionString, '')]",
-            "ApplicationInsightsAgent_EXTENSION_VERSION": "[if(parameters('enableApplicationInsights'), '~3', '')]",
-            "XDT_MicrosoftApplicationInsights_Mode": "[if(parameters('enableApplicationInsights'), 'recommended', '')]"
+            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
+            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').ConnectionString]",
+            "ApplicationInsightsAgent_EXTENSION_VERSION": "~3",
+            "XDT_MicrosoftApplicationInsights_Mode": "recommended"
           }
         },
         {
@@ -213,7 +206,7 @@
     },
     "applicationInsightsName": {
       "type": "string",
-      "value": "[if(parameters('enableApplicationInsights'), variables('appInsightsName'), 'Not Enabled')]",
+      "value": "[variables('appInsightsName')]",
       "metadata": {
         "description": "Name of the Application Insights resource"
       }
