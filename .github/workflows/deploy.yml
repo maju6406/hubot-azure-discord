@@ -44,4 +44,7 @@ jobs:
             hubotName=hubot-discord
             repoUrl=https://github.com/maju6406/hubot-azure-discord.git
             branch=main
+            --verbose
           failOnStdErr: false
+
+          
