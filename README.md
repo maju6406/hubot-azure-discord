@@ -224,7 +224,7 @@ See the [Hubot scripting docs](https://hubotio.github.io/hubot/scripting.html) f
 | `azuredeploy.bicep` | Azure Bicep template for deployment (alternative to ARM template) |
 | `package.json` | Node.js dependencies including hubot, hubot-discord, and hubot-azure-brain |
 | `external-scripts.json` | List of external hubot scripts to load |
-| `server.js` | Entry point for Azure Web App |
+| `server.js` | Entry point for Azure Web App (Linux) |
 | `Procfile` | Process definition for Azure App Service |
 | `deploy.sh` | Custom deployment script used by Kudu |
 | `bin/hubot` | Shell script to run hubot locally |
