@@ -4,6 +4,9 @@
   "private": true,
   "author": "Abir Majumdar",
   "description": "A hubot for Discord deployed on Azure",
+  "scripts": {
+    "start": "hubot --adapter discord --name \"hubot\""
+  },
   "dependencies": {
     "coffee-script": "^1.12.7",
     "hubot": "^11.0.0",

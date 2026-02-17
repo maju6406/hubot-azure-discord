@@ -95,6 +95,7 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'NODE|22-lts'
+      appCommandLine: 'npm start'
       alwaysOn: enableAlwaysOn
       minTlsVersion: '1.2'
       ftpsState: 'Disabled'
@@ -118,6 +119,7 @@ resource webAppConfig 'Microsoft.Web/sites/config@2022-03-01' = {
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
     ApplicationInsightsAgent_EXTENSION_VERSION: '~3'
     XDT_MicrosoftApplicationInsights_Mode: 'recommended'
+    SCM_DO_BUILD_DURING_DEPLOYMENT: 'true'
   }
 }
 
