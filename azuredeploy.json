@@ -11,6 +11,7 @@
   "parameters": {
     "siteName": {
       "type": "string",
+      "defaultValue": "hubot-discord",
       "metadata": {
         "description": "Name of the Azure Web App that hosts the hubot instance"
       }
@@ -51,6 +52,7 @@
     },
     "storageAccountName": {
       "type": "string",
+      "defaultValue": "hubotst",
       "metadata": {
         "description": "Storage account name for hubot brain persistence via hubot-azure-brain"
       }
@@ -75,13 +77,14 @@
     },
     "hubotName": {
       "type": "string",
-      "defaultValue": "hubot",
+      "defaultValue": "hubot-discord",
       "metadata": {
         "description": "Display name for the hubot instance"
       }
     },
     "repoUrl": {
       "type": "string",
+      "defaultValue": "https://github.com/maju6406/hubot-azure-discord.git",
       "metadata": {
         "description": "URL of your forked repository"
       }

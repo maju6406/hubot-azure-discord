@@ -1,5 +1,5 @@
 @description('Name of the Azure Web App that hosts the hubot instance')
-param siteName string
+param siteName string = 'hubot-discord'
 
 @description('Name of the App Service plan for the web app')
 param hostingPlanName string = '${siteName}-plan'
@@ -20,7 +20,7 @@ param pricingTier string = 'Free'
 param enableAlwaysOn bool = false
 
 @description('Storage account name for hubot brain persistence via hubot-azure-brain')
-param storageAccountName string
+param storageAccountName string = 'hubotst'
 
 @description('Replication strategy for the storage account')
 @allowed([
@@ -35,10 +35,10 @@ param storageAccountType string = 'Standard_LRS'
 param discordBotToken string
 
 @description('Display name for the hubot instance')
-param hubotName string = 'hubot'
+param hubotName string = 'hubot-discord'
 
 @description('URL of your forked repository')
-param repoUrl string
+param repoUrl string = 'https://github.com/maju6406/hubot-azure-discord.git'
 
 @description('Git branch to deploy from')
 param branch string = 'main'
