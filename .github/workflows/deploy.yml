@@ -3,6 +3,10 @@ name: Deploy Hubot to Azure
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: read
+
 env:
   RESOURCE_GROUP: hubot-rg
   LOCATION: eastus
@@ -68,7 +72,14 @@ jobs:
         run: npm install --omit=dev
 
       - name: Deploy code to Azure Web App
+        id: deploy-code
         uses: azure/webapps-deploy@v3
         with:
           app-name: hubot-discord
           package: .
+
+      - name: Trigger teardown on deployment failure
+        if: failure() && steps.deploy-code.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run teardown.yml --repo ${{ github.repository }}
