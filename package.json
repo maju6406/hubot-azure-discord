@@ -5,7 +5,7 @@
   "author": "Abir Majumdar",
   "description": "A hubot for Discord deployed on Azure",
   "scripts": {
-    "start": "hubot --adapter discord --name \"hubot\""
+    "start": "hubot --adapter discord --name \"hubot-discord\""
   },
   "dependencies": {
     "coffee-script": "^1.12.7",
