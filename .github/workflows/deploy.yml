@@ -42,8 +42,22 @@ jobs:
             storageAccountType=Standard_LRS
             discordBotToken=${{ secrets.DISCORD_TOKEN }}
             hubotName=hubot-discord
-            --verbose
-          failOnStdErr: true
+          failOnStdErr: false
+
+      - name: Show deployment details on failure
+        if: failure()
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group show \
+              --resource-group hubot-rg \
+              --name azuredeploy \
+              --query properties.error
+            echo "---"
+            az deployment operation group list \
+              --resource-group hubot-rg \
+              --name azuredeploy \
+              --query "[?properties.provisioningState=='Failed']"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
