@@ -1,6 +1,5 @@
 [
   "hubot-azure-brain",
   "hubot-diagnostics",
-  "hubot-help",
-  "hubot-rules"
+  "hubot-help"
 ]

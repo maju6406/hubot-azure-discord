@@ -43,7 +43,7 @@ jobs:
             discordBotToken=${{ secrets.DISCORD_TOKEN }}
             hubotName=hubot-discord
             --verbose
-          failOnStdErr: false
+          failOnStdErr: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -51,7 +51,7 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install --production
+        run: npm install --omit=dev
 
       - name: Deploy code to Azure Web App
         uses: azure/webapps-deploy@v3
