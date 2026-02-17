@@ -42,9 +42,19 @@ jobs:
             storageAccountType=Standard_LRS
             discordBotToken=${{ secrets.DISCORD_TOKEN }}
             hubotName=hubot-discord
-            repoUrl=https://github.com/maju6406/hubot-azure-discord.git
-            branch=main
             --verbose
           failOnStdErr: false
 
-          
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --production
+
+      - name: Deploy code to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: hubot-discord
+          package: .

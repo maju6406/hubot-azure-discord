@@ -37,11 +37,7 @@ param discordBotToken string
 @description('Display name for the hubot instance')
 param hubotName string = 'hubot-discord'
 
-@description('URL of your forked repository')
-param repoUrl string = 'https://github.com/maju6406/hubot-azure-discord.git'
 
-@description('Git branch to deploy from')
-param branch string = 'main'
 
 var tierToSku = {
   Free: 'F1'
@@ -121,19 +117,6 @@ resource webAppConfig 'Microsoft.Web/sites/config@2022-03-01' = {
     XDT_MicrosoftApplicationInsights_Mode: 'recommended'
     SCM_DO_BUILD_DURING_DEPLOYMENT: 'true'
   }
-}
-
-resource webAppSourceControl 'Microsoft.Web/sites/sourcecontrols@2022-03-01' = {
-  name: 'web'
-  parent: webApp
-  properties: {
-    repoUrl: repoUrl
-    branch: branch
-    isManualIntegration: true
-  }
-  dependsOn: [
-    webAppConfig
-  ]
 }
 
 @description('URL of the deployed web app')

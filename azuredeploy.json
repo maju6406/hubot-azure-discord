@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.40.2.10011",
-      "templateHash": "18042053680005681546"
+      "templateHash": "13689925271634099978"
     }
   },
   "parameters": {
@@ -81,20 +81,6 @@
       "metadata": {
         "description": "Display name for the hubot instance"
       }
-    },
-    "repoUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/maju6406/hubot-azure-discord.git",
-      "metadata": {
-        "description": "URL of your forked repository"
-      }
-    },
-    "branch": {
-      "type": "string",
-      "defaultValue": "main",
-      "metadata": {
-        "description": "Git branch to deploy from"
-      }
     }
   },
   "variables": {
@@ -156,6 +142,7 @@
         "httpsOnly": true,
         "siteConfig": {
           "linuxFxVersion": "NODE|22-lts",
+          "appCommandLine": "npm start",
           "alwaysOn": "[parameters('enableAlwaysOn')]",
           "minTlsVersion": "1.2",
           "ftpsState": "Disabled",
@@ -181,26 +168,13 @@
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString]",
         "ApplicationInsightsAgent_EXTENSION_VERSION": "~3",
-        "XDT_MicrosoftApplicationInsights_Mode": "recommended"
+        "XDT_MicrosoftApplicationInsights_Mode": "recommended",
+        "SCM_DO_BUILD_DURING_DEPLOYMENT": "true"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
         "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Web/sites/sourcecontrols",
-      "apiVersion": "2022-03-01",
-      "name": "[format('{0}/{1}', parameters('siteName'), 'web')]",
-      "properties": {
-        "repoUrl": "[parameters('repoUrl')]",
-        "branch": "[parameters('branch')]",
-        "isManualIntegration": true
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-        "[resourceId('Microsoft.Web/sites/config', parameters('siteName'), 'appsettings')]"
       ]
     }
   ],
