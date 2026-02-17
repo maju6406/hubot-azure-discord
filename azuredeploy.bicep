@@ -115,7 +115,7 @@ resource webAppConfig 'Microsoft.Web/sites/config@2022-03-01' = {
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsights.properties.ConnectionString
     ApplicationInsightsAgent_EXTENSION_VERSION: '~3'
     XDT_MicrosoftApplicationInsights_Mode: 'recommended'
-    SCM_DO_BUILD_DURING_DEPLOYMENT: 'true'
+    SCM_DO_BUILD_DURING_DEPLOYMENT: 'false'
   }
 }
 
