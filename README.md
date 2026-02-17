@@ -47,7 +47,36 @@ If the token is invalid, you'll receive an error response:
 
 > **Important:** Fork this repository before clicking the deploy button so the web app is linked to your own repository and you can add additional hubot scripts.
 
+### Deploy with ARM Template
+
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmaju6406%2Fhubot-azure-discord%2Fmain%2Fazuredeploy.json)
+
+### Deploy with Bicep
+
+Alternatively, you can deploy using the Bicep template:
+
+```bash
+# Clone or download the repository
+git clone https://github.com/maju6406/hubot-azure-discord.git
+cd hubot-azure-discord
+
+# Login to Azure
+az login
+
+# Create a resource group
+az group create --name my-hubot-rg --location eastus
+
+# Deploy the Bicep template
+az deployment group create \
+  --resource-group my-hubot-rg \
+  --template-file azuredeploy.bicep \
+  --parameters siteName=my-hubot \
+               storageAccountName=myhubotstore \
+               discordBotToken=YOUR_DISCORD_TOKEN \
+               repoUrl=https://github.com/YOUR_USERNAME/hubot-azure-discord
+```
+
+> **Note:** This deployment creates a **Linux-based** Azure App Service. The app runs Node.js 18 LTS on Linux.
 
 ### Deployment Parameters
 
@@ -191,10 +220,11 @@ See the [Hubot scripting docs](https://hubotio.github.io/hubot/scripting.html) f
 
 | File | Description |
 |---|---|
-| `azuredeploy.json` | Azure ARM template for one-click deployment |
+| `azuredeploy.json` | Azure ARM template for one-click deployment (Linux App Service) |
+| `azuredeploy.bicep` | Azure Bicep template for deployment (alternative to ARM template) |
 | `package.json` | Node.js dependencies including hubot, hubot-discord, and hubot-azure-brain |
 | `external-scripts.json` | List of external hubot scripts to load |
-| `server.js` | Entry point for Azure Web App (IISNode) |
+| `server.js` | Entry point for Azure Web App (Linux) |
 | `Procfile` | Process definition for Azure App Service |
 | `deploy.sh` | Custom deployment script used by Kudu |
 | `bin/hubot` | Shell script to run hubot locally |

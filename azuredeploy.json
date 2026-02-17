@@ -2,7 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "metadata": {
-    "description": "One-click deploy template for Hubot with Discord adapter on Azure, using hubot-azure-brain for persistence"
+    "_generator": {
+      "name": "bicep",
+      "version": "0.40.2.10011",
+      "templateHash": "18042053680005681546"
+    }
   },
   "parameters": {
     "siteName": {
@@ -13,7 +17,7 @@
     },
     "hostingPlanName": {
       "type": "string",
-      "defaultValue": "[concat(parameters('siteName'), '-plan')]",
+      "defaultValue": "[format('{0}-plan', parameters('siteName'))]",
       "metadata": {
         "description": "Name of the App Service plan for the web app"
       }
@@ -27,13 +31,13 @@
     },
     "pricingTier": {
       "type": "string",
+      "defaultValue": "Free",
       "allowedValues": [
         "Free",
         "Shared",
         "Basic",
         "Standard"
       ],
-      "defaultValue": "Free",
       "metadata": {
         "description": "App Service pricing tier"
       }
@@ -53,12 +57,12 @@
     },
     "storageAccountType": {
       "type": "string",
+      "defaultValue": "Standard_LRS",
       "allowedValues": [
         "Standard_LRS",
         "Standard_GRS",
         "Standard_ZRS"
       ],
-      "defaultValue": "Standard_LRS",
       "metadata": {
         "description": "Replication strategy for the storage account"
       }
@@ -98,15 +102,13 @@
       "Standard": "S1"
     },
     "resolvedSku": "[variables('tierToSku')[parameters('pricingTier')]]",
-    "storageApi": "2022-09-01",
-    "webApi": "2022-03-01",
-    "appInsightsName": "[concat(parameters('siteName'), '-insights')]"
+    "appInsightsName": "[format('{0}-insights', parameters('siteName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2022-09-01",
       "name": "[parameters('storageAccountName')]",
-      "apiVersion": "[variables('storageApi')]",
       "location": "[parameters('location')]",
       "kind": "StorageV2",
       "sku": {
@@ -115,21 +117,21 @@
     },
     {
       "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
       "name": "[parameters('hostingPlanName')]",
-      "apiVersion": "[variables('webApi')]",
       "location": "[parameters('location')]",
+      "kind": "linux",
       "sku": {
         "name": "[variables('resolvedSku')]"
       },
       "properties": {
-        "name": "[parameters('hostingPlanName')]",
-        "numberOfWorkers": 1
+        "reserved": true
       }
     },
     {
       "type": "Microsoft.Insights/components",
-      "name": "[variables('appInsightsName')]",
       "apiVersion": "2020-02-02",
+      "name": "[variables('appInsightsName')]",
       "location": "[parameters('location')]",
       "kind": "web",
       "properties": {
@@ -142,82 +144,81 @@
     },
     {
       "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
       "name": "[parameters('siteName')]",
-      "apiVersion": "[variables('webApi')]",
       "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
-      ],
+      "kind": "app,linux",
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
+          "linuxFxVersion": "NODE|18-lts",
           "alwaysOn": "[parameters('enableAlwaysOn')]",
           "httpLoggingEnabled": true,
           "detailedErrorLoggingEnabled": true,
           "requestTracingEnabled": true
         }
       },
-      "resources": [
-        {
-          "type": "config",
-          "name": "appsettings",
-          "apiVersion": "[variables('webApi')]",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-            "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]"
-          ],
-          "properties": {
-            "WEBSITE_NODE_DEFAULT_VERSION": "~18",
-            "HUBOT_ADAPTER": "discord",
-            "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
-            "HUBOT_BRAIN_AZURE_CONNSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), variables('storageApi')).keys[0].value, ';EndpointSuffix=core.windows.net')]",
-            "HUBOT_NAME": "[parameters('hubotName')]",
-            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
-            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', variables('appInsightsName')), '2020-02-02').ConnectionString]",
-            "ApplicationInsightsAgent_EXTENSION_VERSION": "~3",
-            "XDT_MicrosoftApplicationInsights_Mode": "recommended"
-          }
-        },
-        {
-          "type": "sourcecontrols",
-          "name": "web",
-          "apiVersion": "[variables('webApi')]",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-            "[resourceId('Microsoft.Web/sites/config', parameters('siteName'), 'appsettings')]"
-          ],
-          "properties": {
-            "repoUrl": "[parameters('repoUrl')]",
-            "branch": "[parameters('branch')]",
-            "isManualIntegration": true
-          }
-        }
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/{1}', parameters('siteName'), 'appsettings')]",
+      "properties": {
+        "WEBSITE_NODE_DEFAULT_VERSION": "~18",
+        "HUBOT_ADAPTER": "discord",
+        "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
+        "HUBOT_BRAIN_AZURE_CONNSTRING": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-09-01').keys[0].value)]",
+        "HUBOT_NAME": "[parameters('hubotName')]",
+        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').InstrumentationKey]",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString]",
+        "ApplicationInsightsAgent_EXTENSION_VERSION": "~3",
+        "XDT_MicrosoftApplicationInsights_Mode": "recommended"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/sourcecontrols",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/{1}', parameters('siteName'), 'web')]",
+      "properties": {
+        "repoUrl": "[parameters('repoUrl')]",
+        "branch": "[parameters('branch')]",
+        "isManualIntegration": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
+        "[resourceId('Microsoft.Web/sites/config', parameters('siteName'), 'appsettings')]"
       ]
     }
   ],
   "outputs": {
     "webAppUrl": {
       "type": "string",
-      "value": "[concat('https://', reference(resourceId('Microsoft.Web/sites', parameters('siteName')), variables('webApi')).defaultHostName)]",
       "metadata": {
         "description": "URL of the deployed web app"
-      }
+      },
+      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', parameters('siteName')), '2022-03-01').defaultHostName)]"
     },
     "applicationInsightsName": {
       "type": "string",
-      "value": "[variables('appInsightsName')]",
       "metadata": {
         "description": "Name of the Application Insights resource"
-      }
+      },
+      "value": "[variables('appInsightsName')]"
     },
     "storageAccountName": {
       "type": "string",
-      "value": "[parameters('storageAccountName')]",
       "metadata": {
         "description": "Name of the storage account for hubot brain"
-      }
+      },
+      "value": "[parameters('storageAccountName')]"
     }
   }
 }
