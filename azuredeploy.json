@@ -151,7 +151,7 @@
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
-          "linuxFxVersion": "NODE|18-lts",
+          "linuxFxVersion": "NODE|20-lts",
           "alwaysOn": "[parameters('enableAlwaysOn')]",
           "httpLoggingEnabled": true,
           "detailedErrorLoggingEnabled": true,
@@ -167,7 +167,7 @@
       "apiVersion": "2022-03-01",
       "name": "[format('{0}/{1}', parameters('siteName'), 'appsettings')]",
       "properties": {
-        "WEBSITE_NODE_DEFAULT_VERSION": "~18",
+        "WEBSITE_NODE_DEFAULT_VERSION": "~20",
         "HUBOT_ADAPTER": "discord",
         "HUBOT_DISCORD_TOKEN": "[parameters('discordBotToken')]",
         "HUBOT_BRAIN_AZURE_CONNSTRING": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-09-01').keys[0].value)]",

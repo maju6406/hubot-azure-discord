@@ -93,7 +93,7 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
-      linuxFxVersion: 'NODE|18-lts'
+      linuxFxVersion: 'NODE|20-lts'
       alwaysOn: enableAlwaysOn
       httpLoggingEnabled: true
       detailedErrorLoggingEnabled: true
@@ -106,7 +106,7 @@ resource webAppConfig 'Microsoft.Web/sites/config@2022-03-01' = {
   name: 'appsettings'
   parent: webApp
   properties: {
-    WEBSITE_NODE_DEFAULT_VERSION: '~18'
+    WEBSITE_NODE_DEFAULT_VERSION: '~20'
     HUBOT_ADAPTER: 'discord'
     HUBOT_DISCORD_TOKEN: discordBotToken
     HUBOT_BRAIN_AZURE_CONNSTRING: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
