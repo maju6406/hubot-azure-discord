@@ -14,7 +14,7 @@ param location string = resourceGroup().location
   'Basic'
   'Standard'
 ])
-param pricingTier string = 'Free'
+param pricingTier string = 'Basic'
 
 @description('Enable Always On (not available on Free/Shared tiers)')
 param enableAlwaysOn bool = false

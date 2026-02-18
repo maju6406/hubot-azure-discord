@@ -40,7 +40,7 @@ jobs:
           template: ./azuredeploy.bicep
           parameters: >-
             siteName=hubot-discord
-            pricingTier=Free
+            pricingTier=Basic
             enableAlwaysOn=false
             storageAccountName=hubotst
             storageAccountType=Standard_LRS
